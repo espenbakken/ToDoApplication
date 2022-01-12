@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Linking to jQuery-->
+        <script src="JS/jquery-1.7.1.min.js"></script>
+        <title>Project Management</title>
+        <!--Main document for styling -->
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="JS/Chart.bundle.min.js"></script>
+        <link rel="icon" type="image/png" href="images/favicon.ico" sizes="16x16" />
+        <!--Linking to library for icons -->
+        <script src="https://kit.fontawesome.com/ccc4be94bb.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <!-- Pop-up for new member button-->
+        <div class="hover_bkgr_fricc" id="add-member">
+            <span class="helper"></span>
+            <div>
+                <div class="popupCloseButton">&times;</div>
+                <h4>Add new member</h4>
+                <input type="text" name="newMember" id="member-input" placeholder="Name..."><br>
+                <input type="text" name="stilling" id="stilling-input" placeholder="Role..."><br>
+                <input type="button" name="newMemberBtn" id="new-member-btn" value="Add member">
+            </div>
+        </div>
+        <!-- Pop-up for adding deadline-->
+        <div class="hover_bkgr_fricc" id="set-deadline">
+            <span class="helper"></span>
+            <div>
+                <div class="popupCloseButton">&times;</div>
+                <h4>Set Deadline</h4>
+                <form id="set-deadline-form">
+                    <input type="date" name="deadlinedate" id="deadlinedate" ><br>
+                    <span class="error" style="display: none;">Invalid date</span><br>
+                    <input type="submit" id="set-deadline-btn" value="Set Deadline">
+                </form>
+            </div>
+        </div>
+        <!--Pop-up to set new categories-->
+        <div class="hover_bkgr_fricc" id="set-status-categories">
+            <span class="helper"></span>
+            <div>
+                <div class="popupCloseButton">&times;</div>
+                <h4>Define Categories</h4>
+                <input type="text" name="category-1" id="category-1-input" placeholder="Category #1"><br>
+                <input type="text" name="category-2" id="category-2-input" placeholder="Category #2"><br>
+                <input type="text" name="category-3" id="category-3-input" placeholder="Category #3"><br>
+                <input type="submit" id="set-categories-btn" value="Set Categories">
+                <p id="error1"></p>
+            </div>
+        </div>
+        <!--Pop-up to edit tasks-->
+        <div class="hover_bkgr_fricc" id="edit-task">
+            <span class="helper"></span>
+            <div id="edit-tasks">
+                <div class="popupCloseButton">&times;</div>
+                <h4>Edit task</h4>
+            </div>
+        </div>
+
+        <!-- Header-->
+        <div id="header">
+            <div class="help">
+                <h1 class="help"><i class="fas fa-question-circle"></i>Help</h1>
+                <div id="help-field">
+                    <h4><i class="fas fa-question-circle"></i> HELP</h4>
+                    <p>This is a Project Management tool to assist you or your study group to organize work and manage
+                        projects and tasks. </p>
+                    <p>In this tool you can:</p>
+                    <ul>
+                        <li>Set a deadline for your project</li>
+                        <li>Edit and add tasks</li>
+                        <li>Add new member and show their role</li>
+                        <li>Define your own status categories</li>
+                        <li>With drag&drop you can show current status of your task</li>
+                        <li>You can assign member a task with drag&drop</li>
+                        <li>Follow your progress in diagram</li>
+                        <li>Reset and start a new project</li>
+                    </ul>
+                    <p>Enjoy and good luck with your project!</p>
+                </div>
+            </div>
+            <div id="members-output">
+                <h3 id="member-output">Members: </h3>
+            </div>
+
+            <!-- Div for deadline clock-->
+            <div id="clockdiv">
+                <span id="time-remaining">Time remaining:</span>
+                <div>
+                    <span class="days"></span>
+                    <div class="smalltext">Days</div>
+                </div>
+                <div>
+                    <span class="hours"></span>
+                    <div class="smalltext">Hours</div>
+                </div>
+                <div>
+                    <span class="minutes"></span>
+                    <div class="smalltext">Minutes</div>
+                </div>
+                <div>
+                    <span class="seconds"></span>
+                    <div class="smalltext">Seconds</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main div for all content-->
+        <div id="main-div" class="wrapper">
+
+            <!--First field which includes the menu and progress fields-->
+            <div id="sidebar">
+                <div id="menu">
+                    <h2>MENU</h2>
+                    <!--All elements in menu. i classes are for icons-->
+                    <h5 class="trigger_popup_fricc" data-target="add-member"><i class="fas fa-users"></i> Add member to
+                        project</h5>
+                    <script src="https://www.google.com/jsapi"></script>
+                    <h5 class="trigger_popup_fricc" data-target="set-status-categories"><i class="fas fa-edit"></i> Define
+                        Categories</h5>
+                    <h5 class="trigger_popup_fricc" data-target="set-deadline"><i class="fas fa-clock"></i> Set Deadline
+                    </h5>
+                    <h5 id="reset"><i class="fas fa-undo"></i> Reset</h5>
+                </div>
+                <div id="progress">
+                    <h2>PROGRESS</h2>
+                    <div class="chart-container">
+                        <canvas id="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Field -->
+            <div id="to-do" class="container">
+                <h2 id="todoStorage">TO DO</h2>
+                <h5 id="x2" onclick="createNewElement()"><i class="fas fa-tasks"></i> Add new task</h5>
+                <div id="inputField"></div>
+                <!--TaskField is used to be able to drag the div to the other feilds-->
+                <div id="outputTasks" class="taskField"></div>
+            </div>
+
+            <!-- Third field -->
+            <div id="in-progress" class="container">
+                <h2 id="inprogressStorage">IN PROGRESS</h2>
+                <div class="taskField"></div>
+            </div>
+
+            <!-- Fourth field -->
+            <div id="finished" class="container">
+                <h2 id="finishedStorage">FINISHED</h2>
+                <div class="taskField"></div>
+            </div>
+
+            <!-- Fifth field -->
+            <div id="reminders">
+                <h2>REMINDERS</h2>
+                <div class="message-container"></div>
+                <div class="taskField">
+                </div>
+            </div>
+        </div>
+        
+        <!--Main document for script after loading all elements-->
+        <script src="JS/index.js"></script>
+        <script src="JS/renderElements.js"></script>
+        <script src="JS/drag&Drop.js"></script>
+        <script>
+            //Initialize
+            renderTasks();
+            renderMembers();
+            renderNewCategories();
+        </script>
+    </body>
+</html>
